@@ -14,7 +14,6 @@ CREATE PROCEDURE [dbo].[rdjiPopCustOld]
 AS
 DECLARE @cty_id int, @custy_id INT
 
-SET @cty_id = (select CountryID from tblCOUNTRY WHERE CountryName = @cty_name)
 EXEC rdji_GetCountryID
 @1cty_name = @cty_name,
 @1cty_id = @cty_id OUTPUT

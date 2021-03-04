@@ -1,4 +1,6 @@
 -- Creation of a wrapper procedure
+-- !!! Change the age to be more realistic 
+
 
 CREATE PROCEDURE uspWRAPPER_rdjiPopCustOld_registration
 @Run INT
@@ -18,6 +20,8 @@ DECLARE @Rand INT
 WHILE @Run > 0
 BEGIN
 
+
+
 -- SELECT * FROM tblCUSTOMER
 -- Checking for duplicates
 -- IF EXISTS (SELECT CustomerFname, CustomerLname, CustomerDOB 
@@ -30,6 +34,8 @@ BEGIN
 -- find a random value 
 
 SET @PK = (SELECT RAND() * @wCust_ct + 1)
+
+
 set @wf = (SELECT CustomerFname FROM PEEPS.dbo.tblCUSTOMER WHERE CustomerID = @PK)
 set @wl = (SELECT CustomerLname FROM PEEPS.dbo.tblCUSTOMER WHERE CustomerID = @PK)
 set @wdob = (SELECT DateOfBirth FROM PEEPS.dbo.tblCUSTOMER WHERE CustomerID = @PK)
@@ -105,8 +111,6 @@ EXECUTE [rdjiPopCustOld]
 
 SET @Run = @Run - 1
 END
-
-
 
 
 

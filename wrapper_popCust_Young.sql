@@ -1,8 +1,8 @@
--- Creation of a wrapper procedure
--- !!! Change the age to be more realistic 
-
-
-CREATE PROCEDURE uspWRAPPER_rdjiPopCustOld_registration
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[uspWRAPPER_rdjiPopCustOld_registration]
 @Run INT
 AS
 -- DECLARE variables to manage massive inserts --> get row counts for each look up table
@@ -20,8 +20,6 @@ DECLARE @Rand INT
 WHILE @Run > 0
 BEGIN
 
-
-
 -- SELECT * FROM tblCUSTOMER
 -- Checking for duplicates
 -- IF EXISTS (SELECT CustomerFname, CustomerLname, CustomerDOB 
@@ -35,6 +33,17 @@ BEGIN
 
 SET @PK = (SELECT RAND() * @wCust_ct + 1)
 
+DECLARE @CustYoungEnough INT = 0
+
+WHILE @CustYoungEnough = 0
+    BEGIN
+    IF ((SELECT DateOfBirth FROM PEEPS.dbo.tblCUSTOMER WHERE CustomerID = @PK ) > (DATEADD(Year, -38, GetDate())))
+        BEGIN
+        SET @CustYoungEnough = 1
+        END
+    ELSE
+        SET @PK = (SELECT RAND() * @wCust_ct + 1)
+    END
 
 set @wf = (SELECT CustomerFname FROM PEEPS.dbo.tblCUSTOMER WHERE CustomerID = @PK)
 set @wl = (SELECT CustomerLname FROM PEEPS.dbo.tblCUSTOMER WHERE CustomerID = @PK)
@@ -77,8 +86,6 @@ SET @PK = (CASE
 
 SET @wcty = (SELECT CountryName FROM tblCountry WHERE CountryID = @PK)
 
-SELECT * FROM tblCOUNTRY
-
 SET @Rand = (select RAND() * 100 + 1)
 SET @PK = (CASE 
                 WHEN @Rand BETWEEN 23 AND 77
@@ -108,10 +115,8 @@ EXECUTE [rdjiPopCustOld]
   ,@state = @wstate
   ,@dob = @wdob
 
+PRINT @Run
 
 SET @Run = @Run - 1
 END
-
-
-
-
+GO
